@@ -1,0 +1,19 @@
+{
+	"name": "app_bot",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {
+		"dev": "nodemon bot.js",
+		"start": "node bot.js"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"dotenv": "^16.4.5",
+		"node-telegram-bot-api": "^0.66.0",
+		"nodemon": "^3.1.3"
+	}
+}
