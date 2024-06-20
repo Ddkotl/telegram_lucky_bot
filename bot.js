@@ -1,11 +1,13 @@
 import 'dotenv/config'
 import TelegramBot from 'node-telegram-bot-api'
+import prisma from './db.js'
+
 import { getRamdomNumber } from './functions.js'
 import { againOptions, gameOptions } from './options.js'
 
 const bot = new TelegramBot(process.env.BOT_TOKEN, { polling: true })
 bot.on('polling_error', err => {
-	console.log(err.data.err.message)
+	console.log(err.data.message)
 })
 
 const chats = new Object()
@@ -23,7 +25,15 @@ const createGame = async chatId => {
 	}
 }
 
-const start = () => {
+const start = async () => {
+	try {
+		await prisma.$connect().then(() => {
+			return console.log('Database connected')
+		})
+	} catch (error) {
+		console.log('Error connecting to database', error)
+	}
+
 	try {
 		bot.setMyCommands([
 			{ command: '/start', description: 'Приветствие' },
@@ -40,6 +50,15 @@ const start = () => {
 			const username = msg.chat.username
 			const firstname = msg.chat.first_name
 			const text = msg.text
+			const isUserExist = await prisma.user.findUnique({
+				where: { chatId: chatId },
+			})
+			console.log(msg)
+			if (!isUserExist) {
+				await prisma.user.create({
+					data: { chatId: chatId, username: username, first_name: firstname },
+				})
+			}
 
 			if (text === '/start') {
 				await bot.sendSticker(
@@ -53,13 +72,15 @@ const start = () => {
 				)
 			}
 			if (text === '/info') {
-				await bot.sendSticker(
-					chatId,
-					'https://tlgrm.ru/_/stickers/ef5/8e1/ef58e15f-94a2-3d56-a365-ca06e1339d08/4.webp'
-				)
+				const user = await prisma.user.findUnique({
+					where: { chatId: chatId },
+				})
 				return await bot.sendMessage(
 					chatId,
-					'300 наносекунд в день отдыхает разработчик этого бота'
+					`${user.first_name} ${user.username},вот ваша статистика!
+					 Всего игр ${user.wrong + user.right}.
+					 Побед ${user.right}.
+					 Неудач ${user.wrong}.`
 				)
 			}
 			if (text === '/game') {
@@ -81,10 +102,18 @@ const start = () => {
 		try {
 			const data = msg.data
 			const chatId = msg.message.chat.id
+			const user = await prisma.user.findUnique({
+				where: { chatId: chatId },
+			})
 			if (data === '/again') {
+				await bot.deleteMessage(chatId, msg.message.message_id)
 				return createGame(chatId)
 			}
 			if (data == chats[chatId]) {
+				await prisma.user.update({
+					where: { chatId: chatId },
+					data: { right: user.right + 1 },
+				})
 				await bot.editMessageText(
 					`Вы выбрали ${data}, поздравляю, вы угадали`,
 					{
@@ -98,6 +127,10 @@ const start = () => {
 					againOptions
 				)
 			} else {
+				await prisma.user.update({
+					where: { chatId: chatId },
+					data: { wrong: user.wrong + 1 },
+				})
 				await bot.editMessageText(
 					`Вы выбрали ${data}, вы не угадали, правильное число ${chats[chatId]}`,
 					{
