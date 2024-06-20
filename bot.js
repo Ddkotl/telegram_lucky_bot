@@ -1,7 +1,6 @@
 import 'dotenv/config'
 import TelegramBot from 'node-telegram-bot-api'
 import prisma from './db.js'
-
 import { getRamdomNumber } from './functions.js'
 import { againOptions, gameOptions } from './options.js'
 
@@ -50,11 +49,11 @@ const start = async () => {
 			const username = msg.chat.username
 			const firstname = msg.chat.first_name
 			const text = msg.text
-			const isUserExist = await prisma.user.findUnique({
+			const user = await prisma.user.findUnique({
 				where: { chatId: chatId },
 			})
 			console.log(msg)
-			if (!isUserExist) {
+			if (!user) {
 				await prisma.user.create({
 					data: { chatId: chatId, username: username, first_name: firstname },
 				})
@@ -67,7 +66,19 @@ const start = async () => {
 				)
 				return await bot.sendMessage(
 					chatId,
-					'Привет ' + firstname + ' ' + username + ', проверь свою удачу!',
+					`
+					  Привет ${user.first_name} ${user.username}, проверь свою удачу!
+
+					${process.env.COIN_NAME} Ожидается большой аирдроп 🚀 
+
+					${process.env.COIN_NAME} — это новый токен на TON с реальным применением. Монета станет главным игровым ресурсом в будущей экосистеме LUCK, а добывать ее можно уже сейчас.
+
+					Хотите получить еще больше ${process.env.COIN_NAME}? Просто поделитесь этим ботом со своими друзьями! Как только друг присоединится,вы и он получите приветственный бонус - 500 монет ${process.env.COIN_NAME}!
+
+					Ваш баланс: ${user.LUCK} ${process.env.COIN_NAME}💰
+
+					👨‍👩‍👧‍👦 Количество рефералов: ${user.referals} 
+					`,
 					againOptions
 				)
 			}
@@ -110,12 +121,20 @@ const start = async () => {
 				return createGame(chatId)
 			}
 			if (data == chats[chatId]) {
+				const winCoin = Number(process.env.WIN_COIN)
 				await prisma.user.update({
 					where: { chatId: chatId },
-					data: { right: user.right + 1 },
+					data: {
+						right: user.right + 1,
+						LUCK: user.LUCK + winCoin,
+					},
 				})
 				await bot.editMessageText(
-					`Вы выбрали ${data}, поздравляю, вы угадали`,
+					`Вы выбрали ${data}, поздравляю, вы угадали!
+					Вы получили ${process.env.WIN_COIN} ${process.env.COIN_NAME}, осталось ${
+						user.LUCK + winCoin
+					} ${process.env.COIN_NAME}
+					`,
 					{
 						chat_id: chatId,
 						message_id: msg.message.message_id,
@@ -127,17 +146,45 @@ const start = async () => {
 					againOptions
 				)
 			} else {
-				await prisma.user.update({
-					where: { chatId: chatId },
-					data: { wrong: user.wrong + 1 },
-				})
-				await bot.editMessageText(
-					`Вы выбрали ${data}, вы не угадали, правильное число ${chats[chatId]}`,
-					{
-						chat_id: chatId,
-						message_id: msg.message.message_id,
-					}
-				)
+				if (user.LUCK <= 0) {
+					await prisma.user.update({
+						where: { chatId: chatId },
+						data: { wrong: user.wrong + 1 },
+					})
+					await bot.editMessageText(
+						`Вы выбрали ${data}, вы не угадали, было загадано число ${chats[chatId]}
+						Осталось ${user.LUCK} ${process.env.COIN_NAME}
+						`,
+						{
+							chat_id: chatId,
+							message_id: msg.message.message_id,
+						}
+					)
+				} else {
+					await prisma.user.update({
+						where: { chatId: chatId },
+						data: {
+							wrong: user.wrong + 1,
+							LUCK: user.LUCK - process.env.LOSE_COIN,
+						},
+					})
+					await bot.editMessageText(
+						`Вы выбрали ${data}, вы не угадали, было загадано число ${
+							chats[chatId]
+						}
+						К сожалению, вы потеряли ${process.env.LOSE_COIN} ${
+							process.env.COIN_NAME
+						}, осталось ${user.LUCK - process.env.LOSE_COIN} ${
+							process.env.COIN_NAME
+						}
+						`,
+						{
+							chat_id: chatId,
+							message_id: msg.message.message_id,
+						}
+					)
+				}
+
 				return await bot.sendMessage(
 					chatId,
 					'Xотите сыграть еще?',

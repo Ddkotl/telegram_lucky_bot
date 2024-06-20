@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "users" ADD COLUMN     "luck" INTEGER NOT NULL DEFAULT 0;

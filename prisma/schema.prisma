@@ -22,6 +22,8 @@ model User {
   username   String?
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+  LUCK       Int      @default(0) @map("luck")
+  referals   Int      @default(0)
 
   @@map("users")
 }
