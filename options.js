@@ -25,3 +25,20 @@ export const againOptions = {
 		inline_keyboard: [[{ text: 'Начать игру', callback_data: '/again' }]],
 	}),
 }
+export const mainMenuOptions = {
+	reply_markup: JSON.stringify({
+		inline_keyboard: [
+			[{ text: 'Начать игру', callback_data: '/again' }],
+			[{ text: 'Задания', callback_data: '/tasks' }],
+			[{ text: 'Судьба', callback_data: '/fate' }],
+			[
+				{ text: 'Магазин', callback_data: '/shop' },
+				{ text: 'Инвентарь', callback_data: '/inventory' },
+			],
+			[
+				{ text: 'Кошелек', callback_data: '/wallet' },
+				{ text: 'Язык', callback_data: '/lang' },
+			],
+		],
+	}),
+}
