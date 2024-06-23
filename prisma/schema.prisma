@@ -24,6 +24,7 @@ model User {
   updated_at DateTime @updatedAt
   LUCK       Int      @default(0) @map("luck")
   referals   Int      @default(0)
+  refered    Boolean  @default(false)
 
   @@map("users")
 }

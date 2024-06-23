@@ -1,12 +1,21 @@
 import 'dotenv/config'
 import { bot } from '../bot.js'
+import {
+	updateReferedUser,
+	updateRefererUser,
+} from '../db_querys/user/index.js'
 import { mainMenuOptions } from '../options.js'
-export async function startCommand(chatId, user) {
+export async function startCommand(chatId, user, msg) {
 	try {
 		await bot.sendSticker(
 			chatId,
 			'https://tlgrm.ru/_/stickers/c70/8c4/c708c4e4-425e-43c1-893f-6478eae07d62/2.webp'
 		)
+		if (msg.text.length > 6 && user.refered === false) {
+			const refID = msg.text.slice(7)
+			await updateRefererUser(refID)
+			await updateReferedUser(user)
+		}
 		return await bot.sendMessage(
 			chatId,
 			`

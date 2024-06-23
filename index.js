@@ -30,8 +30,8 @@ const startApp = async () => {
 				createUser(chatId, username, firstname)
 			}
 
-			if (text === '/start') {
-				return await startCommand(chatId, user)
+			if (text.startsWith('/start')) {
+				return await startCommand(chatId, user, msg)
 			}
 			if (text === '/info') {
 				return await infoCommand(chatId, user)

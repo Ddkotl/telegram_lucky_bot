@@ -2,7 +2,7 @@ import 'dotenv/config'
 import { bot } from '../bot.js'
 
 export const refCommand = async (chatId, user) => {
-	const bonus = user.referals * process.env.BONUS_FOR_REFERALS
+	const bonus = user.referals * process.env.COIN_FOR_REFERAL
 	await bot.sendMessage(
 		chatId,
 		`
