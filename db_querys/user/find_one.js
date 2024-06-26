@@ -10,3 +10,9 @@ export const findUserById = async Id => {
 		where: { id: Id },
 	})
 }
+export const findUserRewardsByChatId = async chatId => {
+	return await prisma.user.findUnique({
+		where: { chatId: chatId },
+		include: { userRevard: true },
+	})
+}

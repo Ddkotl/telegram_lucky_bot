@@ -14,17 +14,31 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(uuid()) @db.Uuid
-  chatId     Int      @unique @map("chat_id")
-  right      Int      @default(0)
-  wrong      Int      @default(0)
+  id         String      @id @default(uuid())
+  chatId     Int         @unique @map("chat_id")
+  right      Int         @default(0)
+  wrong      Int         @default(0)
   first_name String?
   username   String?
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  LUCK       Int      @default(0) @map("luck")
-  referals   Int      @default(0)
-  refered    Boolean  @default(false)
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+  LUCK       Int         @default(0) @map("luck")
+  referals   Int         @default(0)
+  refered    Boolean     @default(false)
+  userRevard UserReward?
 
   @@map("users")
+}
+
+model UserReward {
+  id            String  @id @default(uuid())
+  user          User    @relation(fields: [userId], references: [id])
+  userId        String  @unique
+  smallBox      Int     @default(0) @map("small_box")
+  midlelBox     Int     @default(0) @map("midle_box")
+  largeBox      Int     @default(0) @map("large_box")
+  bronzeAmylet  Boolean @default(false) @map("bronze_amulet")
+  silverAmylet  Boolean @default(false) @map("silver_amulet")
+  goldAmylet    Boolean @default(false) @map("gold_amulet")
+  diamondAmylet Boolean @default(false) @map("diamond_amulet")
 }

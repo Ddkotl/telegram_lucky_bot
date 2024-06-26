@@ -6,7 +6,7 @@ export const gameCommand = async chatId => {
 	try {
 		await bot.sendMessage(
 			chatId,
-			'Я загадал цифру от 0 до 9, попробуй отгадать.',
+			'🤔Я загадал цифру от 0 до 9, попробуй отгадать.',
 			gameOptions
 		)
 		chats[chatId] = getRamdomNumber()

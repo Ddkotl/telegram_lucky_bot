@@ -21,6 +21,7 @@ export const updateReferedUser = async user => {
 		where: { id: user.id },
 		data: {
 			refered: true,
+			LUCK: user.LUCK + Number(process.env.COIN_FOR_REFERAL),
 		},
 	})
 }
