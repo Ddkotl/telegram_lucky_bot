@@ -11,10 +11,15 @@ import {
 import prisma from './db.js'
 
 import { testConnect } from './db_querys/index.js'
+import { addSmallBoxByUserId } from './db_querys/reward/update.js'
 import { findUserRewardsByChatId } from './db_querys/user/find_one.js'
 import { createUser, findUserByChatId } from './db_querys/user/index.js'
 import {
+	amuletOptions,
+	boxOptions,
 	connectWalletOptions,
+	goToMainMenuOptions,
+	saveWalletOptions,
 	shopOptions,
 	startGameOptions,
 } from './options.js'
@@ -30,6 +35,7 @@ const startApp = async () => {
 			const username = msg.chat.username
 			const firstname = msg.chat.first_name
 			const text = msg.text
+
 			const user = await findUserByChatId(chatId)
 			if (!user) {
 				await createUser(chatId, username, firstname, text)
@@ -77,6 +83,40 @@ const startApp = async () => {
 					}
 				)
 			}
+			if (data === '/box') {
+				await bot.deleteMessage(chatId, msg.message.message_id)
+				return await bot.sendMessage(
+					chatId,
+					`💎В Магазине можно приобрести:\n\n1.Cтарый ларец (500 ${process.env.COIN_NAME})\nЕжедневно приносит от 10 до 50 ${process.env.COIN_NAME}\n\n2. Роскошный ларец (2500 ${process.env.COIN_NAME})\nЕжедневно приносит от 60 до 250 ${process.env.COIN_NAME}\n\n3. Таинственый ларец (5500 ${process.env.COIN_NAME})\nЕжедневно приносит от 140 до 550 ${process.env.COIN_NAME}\n\n💎Ваш баланс: ${user.LUCK} ${process.env.COIN_NAME}`,
+					{
+						parse_mode: 'HTML',
+						...boxOptions,
+					}
+				)
+			}
+			if (data === '/smallBox') {
+				if (user.LUCK < 500) {
+					return await bot.sendMessage(
+						chatId,
+						`❌Недостаточно ${process.env.COIN_NAME} для покупки!`
+					)
+				} else {
+					await bot.deleteMessage(chatId, msg.message.message_id)
+					await addSmallBoxByUserId(user)
+					return await bot.sendMessage(
+						chatId,
+						`✅ Вы успешно приобрели 1 Cтарый ларец!`,
+						{ parse_mode: 'HTML', ...boxOptions }
+					)
+				}
+			}
+			if (data === '/amulet') {
+				await bot.deleteMessage(chatId, msg.message.message_id)
+				return await bot.sendMessage(chatId, 'amulet', {
+					parse_mode: 'HTML',
+					...amuletOptions,
+				})
+			}
 			if (data === '/inventory') {
 				const revard = await findUserRewardsByChatId(chatId)
 				console.log(revard)
@@ -84,10 +124,19 @@ const startApp = async () => {
 			}
 			if (data === '/connectWallet') {
 				await bot.deleteMessage(chatId, msg.message.message_id)
+
 				return await bot.sendMessage(
 					chatId,
-					`💎Введите номер вашего кошелька в сети $TON:`,
-					{ parse_mode: 'HTML', ...connectWalletOptions }
+					`💎Введите номер вашего кошелька в сети $TON и нажмите сохранить:`,
+					{ parse_mode: 'HTML', ...saveWalletOptions }
+				)
+			}
+			if (data === '/saveWallet') {
+				console.log(msg)
+				return await bot.sendMessage(
+					chatId,
+					`��Кошелек успешно сохранен, теперь вы можете начать получать ${process.env.COIN_NAME}!`,
+					{ parse_mode: 'HTML', ...goToMainMenuOptions }
 				)
 			}
 			if (data === '/wallet') {

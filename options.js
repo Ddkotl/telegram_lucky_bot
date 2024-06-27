@@ -72,6 +72,16 @@ export const connectWalletOptions = {
 		],
 	}),
 }
+export const saveWalletOptions = {
+	reply_markup: JSON.stringify({
+		inline_keyboard: [
+			[
+				{ text: 'Сохранить', callback_data: '/saveWallet' },
+				{ text: '♻️В главное меню', callback_data: '/goToMainMenu' },
+			],
+		],
+	}),
+}
 
 export const shopOptions = {
 	reply_markup: JSON.stringify({
@@ -88,16 +98,27 @@ export const shopOptions = {
 export const boxOptions = {
 	reply_markup: JSON.stringify({
 		inline_keyboard: [
+			[{ text: 'Купить старый ларец', callback_data: '/smallBox' }],
+			[{ text: 'Купить роскошный ларец', callback_data: '/middleBox' }],
+			[{ text: 'Купить таинственый ларец', callback_data: '/largeBox' }],
+
 			[
-				{ text: 'старый ларец с удачей', callback_data: '/smallBox' },
-				{ text: 'роскошный ларец с удачей', callback_data: '/middleBox' },
-				{ text: 'таинственый ларец с удачей', callback_data: '/largeBox' },
+				{ text: 'Назад', callback_data: '/shop' },
+				{ text: '♻️В главное меню', callback_data: '/goToMainMenu' },
 			],
+		],
+	}),
+}
+export const amuletOptions = {
+	reply_markup: JSON.stringify({
+		inline_keyboard: [
+			[{ text: 'Бронзовый талисман', callback_data: '/bronzeAmulet' }],
+			[{ text: 'Серебряный талисман', callback_data: '/silverAmulet' }],
+			[{ text: 'Золотой талисман', callback_data: '/goldAmulet' }],
+			[{ text: 'Бриллиантовый талисман', callback_data: '/diamondAmulet' }],
 			[
-				{ text: 'Бронзовый талисман', callback_data: '/bronzeAmulet' },
-				{ text: 'Серебряный талисман', callback_data: '/silverAmulet' },
-				{ text: 'Золотой талисман', callback_data: '/goldAmulet' },
-				{ text: 'Бриллиантовый талисман', callback_data: '/diamondAmulet' },
+				{ text: 'Назад', callback_data: '/shop' },
+				{ text: '♻️В главное меню', callback_data: '/goToMainMenu' },
 			],
 		],
 	}),

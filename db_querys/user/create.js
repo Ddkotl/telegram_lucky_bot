@@ -1,4 +1,5 @@
 import prisma from '../../db.js'
+import { createUserReward } from '../reward/index.js'
 import { updateReferedUser, updateRefererUser } from './update.js'
 
 export const createUser = async (chatId, username, firstname, text) => {
@@ -10,4 +11,5 @@ export const createUser = async (chatId, username, firstname, text) => {
 		await updateRefererUser(refID)
 		await updateReferedUser(user)
 	}
+	await createUserReward(user.id)
 }

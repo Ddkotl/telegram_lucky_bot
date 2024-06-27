@@ -25,6 +25,7 @@ model User {
   LUCK       Int         @default(0) @map("luck")
   referals   Int         @default(0)
   refered    Boolean     @default(false)
+  tonWallet  String?     @map("ton_wallet")
   userRevard UserReward?
 
   @@map("users")
