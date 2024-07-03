@@ -22,11 +22,13 @@ model User {
   username   String?
   created_at DateTime    @default(now())
   updated_at DateTime    @updatedAt
+  lang       String
   LUCK       Int         @default(0) @map("luck")
   referals   Int         @default(0)
   refered    Boolean     @default(false)
   tonWallet  String?     @map("ton_wallet")
   userRevard UserReward?
+  userTask   UserTask?
 
   @@map("users")
 }
@@ -42,4 +44,11 @@ model UserReward {
   silverAmylet  Boolean @default(false) @map("silver_amulet")
   goldAmylet    Boolean @default(false) @map("gold_amulet")
   diamondAmylet Boolean @default(false) @map("diamond_amulet")
+}
+
+model UserTask {
+  id     String  @id @default(uuid())
+  user   User    @relation(fields: [userId], references: [id])
+  userId String  @unique
+  task1  Boolean @default(false)
 }

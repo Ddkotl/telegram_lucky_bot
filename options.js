@@ -29,39 +29,7 @@ export const startGameOptions = {
 		],
 	}),
 }
-export const mainMenuOptions = {
-	reply_markup: JSON.stringify({
-		inline_keyboard: [
-			[{ text: '▶️Начать игру', callback_data: '/game' }],
-			[{ text: '📢Задания', callback_data: '/tasks' }],
-			[
-				{ text: '🛒Магазин', callback_data: '/shop' },
-				{ text: '🎁Инвентарь', callback_data: '/inventory' },
-			],
-			[
-				{ text: '📝Статистика', callback_data: '/info' },
-				{ text: '🫡Рефералы', callback_data: '/ref' },
-			],
-			[{ text: '💸Кошелек', callback_data: '/wallet' }],
-		],
-	}),
-}
 
-export const goToMainMenuOptions = {
-	reply_markup: JSON.stringify({
-		inline_keyboard: [
-			[{ text: '♻️В главное меню', callback_data: '/goToMainMenu' }],
-		],
-	}),
-}
-
-export const tasksOptions = {
-	reply_markup: JSON.stringify({
-		inline_keyboard: [
-			[{ text: 'Подпишись на канал', callback_data: '/SubTo' }],
-		],
-	}),
-}
 export const connectWalletOptions = {
 	reply_markup: JSON.stringify({
 		inline_keyboard: [
@@ -109,6 +77,16 @@ export const boxOptions = {
 		],
 	}),
 }
+export const backToBoxOptions = {
+	reply_markup: JSON.stringify({
+		inline_keyboard: [
+			[
+				{ text: 'Назад', callback_data: '/box' },
+				{ text: '♻️В главное меню', callback_data: '/goToMainMenu' },
+			],
+		],
+	}),
+}
 export const amuletOptions = {
 	reply_markup: JSON.stringify({
 		inline_keyboard: [
@@ -118,6 +96,17 @@ export const amuletOptions = {
 			[{ text: 'Бриллиантовый талисман', callback_data: '/diamondAmulet' }],
 			[
 				{ text: 'Назад', callback_data: '/shop' },
+				{ text: '♻️В главное меню', callback_data: '/goToMainMenu' },
+			],
+		],
+	}),
+}
+
+export const backToAmuletOptions = {
+	reply_markup: JSON.stringify({
+		inline_keyboard: [
+			[
+				{ text: 'Назад', callback_data: '/amulet' },
 				{ text: '♻️В главное меню', callback_data: '/goToMainMenu' },
 			],
 		],
