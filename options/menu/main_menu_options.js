@@ -40,6 +40,10 @@ export const mainMenuOptions = async lang => {
 							text: `${lang === 'ru' ? `💸Кошелек` : `💸Wallet`}`,
 							callback_data: '/wallet',
 						},
+						{
+							text: `${lang === 'ru' ? `🏴‍☠️Язык` : `🏴‍☠️Language`}`,
+							callback_data: '/lang',
+						},
 					],
 				],
 			}),

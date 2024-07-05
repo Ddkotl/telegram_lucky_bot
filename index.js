@@ -10,6 +10,11 @@ import {
 } from './commands/index.js'
 
 import { createUserActions } from './actions/user/index.js'
+import {
+	chooseLangEn,
+	chooseLangRu,
+	editLangQuery,
+} from './callback_queries/lang/index.js'
 import { findRewardInfoByUserID } from './db_querys/reward/index.js'
 import { completeTask1, findTaskInfoByUserID } from './db_querys/task/index.js'
 import {
@@ -49,6 +54,15 @@ const startApp = async () => {
 			const user = await findUserByChatId(chatId)
 			const userReward = await findRewardInfoByUserID(user.id)
 			const userTask = await findTaskInfoByUserID(user.id)
+			if (data === '/lang') {
+				return await editLangQuery(chatId, msg)
+			}
+			if (data === '/langEn') {
+				return await chooseLangEn(msg, chatId, user)
+			}
+			if (data === '/langRu') {
+				return await chooseLangRu(msg, chatId, user)
+			}
 			if (data === '/info') {
 				await bot.deleteMessage(chatId, msg.message.message_id)
 				return await infoCommand(chatId, user)

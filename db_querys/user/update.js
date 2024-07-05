@@ -61,3 +61,14 @@ export const updateReferedUser = async user => {
 		console.log(error)
 	}
 }
+
+export const updateUserLang = async (userId, lang) => {
+	try {
+		await prisma.user.update({
+			where: { id: userId },
+			data: { lang: lang },
+		})
+	} catch (error) {
+		console.log(error)
+	}
+}
