@@ -1,4 +1,3 @@
-export { gameCommand } from './game_command.js'
 export { infoCommand } from './info_command.js'
 export { notUnderstandCommand } from './not_understand_command.js'
 export { refCommand } from './ref_command.js'

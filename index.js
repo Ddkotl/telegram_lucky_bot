@@ -1,7 +1,6 @@
 import 'dotenv/config'
 import { bot } from './bot.js'
 import {
-	gameCommand,
 	infoCommand,
 	notUnderstandCommand,
 	refCommand,
@@ -10,21 +9,11 @@ import {
 } from './commands/index.js'
 
 import { createUserActions } from './actions/user/index.js'
-import {
-	chooseLangEn,
-	chooseLangRu,
-	editLangQuery,
-} from './callback_queries/lang/index.js'
+import { game, langQuery } from './callback_queries/index.js'
 import { findRewardInfoByUserID } from './db_querys/reward/index.js'
 import { completeTask1, findTaskInfoByUserID } from './db_querys/task/index.js'
-import {
-	findUserByChatId,
-	updateUserLose,
-	updateUserWin,
-} from './db_querys/user/index.js'
-import { boxOptions, shopOptions, startGameOptions } from './options.js'
-
-export const chats = new Object()
+import { findUserByChatId } from './db_querys/user/index.js'
+import { boxOptions, connectWalletOptions, shopOptions } from './options.js'
 
 const startApp = async () => {
 	setMyCommands()
@@ -54,14 +43,14 @@ const startApp = async () => {
 			const user = await findUserByChatId(chatId)
 			const userReward = await findRewardInfoByUserID(user.id)
 			const userTask = await findTaskInfoByUserID(user.id)
-			if (data === '/lang') {
-				return await editLangQuery(chatId, msg)
-			}
-			if (data === '/langEn') {
-				return await chooseLangEn(msg, chatId, user)
-			}
-			if (data === '/langRu') {
-				return await chooseLangRu(msg, chatId, user)
+
+			await game(data, msg, chatId, user)
+
+			await langQuery(data, chatId, msg, user)
+
+			if (data === '/goToMainMenu') {
+				await bot.deleteMessage(chatId, msg.message.message_id)
+				return await startCommand(chatId, user)
 			}
 			if (data === '/info') {
 				await bot.deleteMessage(chatId, msg.message.message_id)
@@ -266,71 +255,6 @@ const startApp = async () => {
 					chatId,
 					`💎Привяжите свой кошелек в сети $TON, на него будут отправляться награды и будущий аирдроп.\n\n 💎В данный момент кошелек не привязан`,
 					{ parse_mode: 'HTML', ...connectWalletOptions }
-				)
-			}
-			if (data === '/goToMainMenu') {
-				await bot.deleteMessage(chatId, msg.message.message_id)
-				return await startCommand(chatId, user)
-			}
-			if (data === '/game') {
-				await bot.deleteMessage(chatId, msg.message.message_id)
-				return gameCommand(chatId)
-			}
-			if (data == chats[chatId]) {
-				await updateUserWin(user)
-				await bot.editMessageText(
-					`🥳Вы выбрали ${data}, поздравляю, вы угадали!\nВы получили ${
-						process.env.WIN_COIN
-					} ${process.env.COIN_NAME}, осталось ${
-						Number(user.LUCK) + Number(process.env.WIN_COIN)
-					} ${process.env.COIN_NAME}
-					`,
-					{
-						chat_id: chatId,
-						message_id: msg.message.message_id,
-					},
-					{ parse_mode: 'HTML' }
-				)
-				return await bot.sendMessage(
-					chatId,
-					'Xотите сыграть еще?',
-					startGameOptions
-				)
-			} else {
-				if (user.LUCK <= 0) {
-					await updateUserLose(user)
-					await bot.editMessageText(
-						`🥺Вы выбрали ${data}, вы не угадали, было загадано число ${chats[chatId]}.\nОсталось ${user.LUCK} ${process.env.COIN_NAME}, казино и ставки явно не ваша тема
-						`,
-						{
-							chat_id: chatId,
-							message_id: msg.message.message_id,
-						},
-						{ parse_mode: 'HTML' }
-					)
-				} else {
-					await updateUserLose(user)
-					await bot.editMessageText(
-						`🥺Вы выбрали ${data}, вы не угадали, было загадано число ${
-							chats[chatId]
-						}.\nК сожалению, вы потеряли ${process.env.LOSE_COIN} ${
-							process.env.COIN_NAME
-						}, осталось ${user.LUCK - process.env.LOSE_COIN} ${
-							process.env.COIN_NAME
-						}
-						`,
-						{
-							chat_id: chatId,
-							message_id: msg.message.message_id,
-						},
-						{ parse_mode: 'HTML' }
-					)
-				}
-
-				return await bot.sendMessage(
-					chatId,
-					'Xотите сыграть еще?',
-					startGameOptions
 				)
 			}
 		} catch (error) {
