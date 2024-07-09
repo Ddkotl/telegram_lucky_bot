@@ -16,7 +16,7 @@ export const game = async (data, msg, chatId, user) => {
 		await bot.deleteMessage(chatId, msg.message.message_id)
 		return startGame(chatId, chats, user)
 	}
-	if (data == chats[chatId]) {
+	if (!data.startsWith('/') && data == chats[chatId]) {
 		await updateUserWin(user)
 		await bot.editMessageText(
 			await winnerMessage(user, data),
@@ -31,7 +31,7 @@ export const game = async (data, msg, chatId, user) => {
 			await playAgainMessage(user.lang),
 			await startGameOptions(user.lang)
 		)
-	} else {
+	} else if (!data.startsWith('/') && data !== chats[chatId]) {
 		if (user.LUCK <= 0) {
 			await updateUserLose(user)
 			await bot.editMessageText(

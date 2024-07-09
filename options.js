@@ -28,42 +28,6 @@ export const saveWalletOptions = {
 	}),
 }
 
-export const shopOptions = {
-	reply_markup: JSON.stringify({
-		inline_keyboard: [
-			[
-				{ text: 'Ларцы с удачей', callback_data: '/box' },
-				{ text: 'Волшебные талисманы', callback_data: '/amulet' },
-			],
-
-			[{ text: '♻️В главное меню', callback_data: '/goToMainMenu' }],
-		],
-	}),
-}
-export const boxOptions = {
-	reply_markup: JSON.stringify({
-		inline_keyboard: [
-			[{ text: 'Купить старый ларец', callback_data: '/smallBox' }],
-			[{ text: 'Купить роскошный ларец', callback_data: '/middleBox' }],
-			[{ text: 'Купить таинственый ларец', callback_data: '/largeBox' }],
-
-			[
-				{ text: 'Назад', callback_data: '/shop' },
-				{ text: '♻️В главное меню', callback_data: '/goToMainMenu' },
-			],
-		],
-	}),
-}
-export const backToBoxOptions = {
-	reply_markup: JSON.stringify({
-		inline_keyboard: [
-			[
-				{ text: 'Назад', callback_data: '/box' },
-				{ text: '♻️В главное меню', callback_data: '/goToMainMenu' },
-			],
-		],
-	}),
-}
 export const amuletOptions = {
 	reply_markup: JSON.stringify({
 		inline_keyboard: [

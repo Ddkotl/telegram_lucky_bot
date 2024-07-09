@@ -9,11 +9,11 @@ import {
 } from './commands/index.js'
 
 import { createUserActions } from './actions/user/index.js'
-import { game, langQuery } from './callback_queries/index.js'
+import { game, langQuery, shopQuery } from './callback_queries/index.js'
 import { findRewardInfoByUserID } from './db_querys/reward/index.js'
 import { completeTask1, findTaskInfoByUserID } from './db_querys/task/index.js'
 import { findUserByChatId } from './db_querys/user/index.js'
-import { boxOptions, connectWalletOptions, shopOptions } from './options.js'
+import { connectWalletOptions } from './options.js'
 
 const startApp = async () => {
 	setMyCommands()
@@ -45,7 +45,7 @@ const startApp = async () => {
 			const userTask = await findTaskInfoByUserID(user.id)
 
 			await game(data, msg, chatId, user)
-
+			await shopQuery(data, msg, chatId, user)
 			await langQuery(data, chatId, msg, user)
 
 			if (data === '/goToMainMenu') {
@@ -141,94 +141,7 @@ const startApp = async () => {
 					)
 				}
 			}
-			if (data === '/shop') {
-				await bot.deleteMessage(chatId, msg.message.message_id)
-				return await bot.sendMessage(
-					chatId,
-					`💎В магазине вы можете приобретать предметы,увеличивающие прирост вашей удачи ${process.env.COIN_NAME}.\n\n💎В данный момент есть товары двух видов:\n\n🎁Ларцы - продаются за ${process.env.COIN_NAME} и дают случайное количество ${process.env.COIN_NAME} через определенное количество времени. Ларцов можно покупать неограниченное количество.\n\n🪡Талисманы - они дают случайное количество ${process.env.COIN_NAME} через определенное количество времени, а получить их можно только имея определенное количество рефералов.`,
-					{
-						parse_mode: 'HTML',
-						...shopOptions,
-					}
-				)
-			}
-			if (data === '/box') {
-				await bot.deleteMessage(chatId, msg.message.message_id)
-				return await bot.sendMessage(
-					chatId,
-					`💎В Магазине можно приобрести:\n\n1.Cтарый ларец (500 ${process.env.COIN_NAME})\nЕжедневно приносит от 10 до 50 ${process.env.COIN_NAME}\n\n2. Роскошный ларец (2500 ${process.env.COIN_NAME})\nЕжедневно приносит от 60 до 250 ${process.env.COIN_NAME}\n\n3. Таинственый ларец (5500 ${process.env.COIN_NAME})\nЕжедневно приносит от 140 до 550 ${process.env.COIN_NAME}\n\n💎Ваш баланс: ${user.LUCK} ${process.env.COIN_NAME}\n\n💎Карточки нужно активировать в инвентаре`,
-					{
-						parse_mode: 'HTML',
-						...boxOptions,
-					}
-				)
-			}
-			if (data === '/smallBox') {
-				if (user.LUCK < process.env.SMALL_BOX_LUCK) {
-					return await bot.sendMessage(
-						chatId,
-						`❌Недостаточно ${process.env.COIN_NAME} для покупки!`
-					)
-				} else {
-					await bot.deleteMessage(chatId, msg.message.message_id)
-					await addSmallBoxByUserId(user)
-					return await bot.sendMessage(
-						chatId,
-						`✅ Вы успешно приобрели 1 Cтарый ларец! Всего: ${
-							userReward.smallBox + 1
-						}`,
-						{ parse_mode: 'HTML', ...backToBoxOptions }
-					)
-				}
-			}
-			if (data === '/middleBox') {
-				if (user.LUCK < process.env.MIDDLE_BOX_LUCK) {
-					return await bot.sendMessage(
-						chatId,
-						`❌Недостаточно ${process.env.COIN_NAME} для покупки!`
-					)
-				} else {
-					await bot.deleteMessage(chatId, msg.message.message_id)
-					await addMiddleBoxByUserId(user)
-					return await bot.sendMessage(
-						chatId,
-						`✅ Вы успешно приобрели 1 Роскошный ларец! Всего: ${
-							userReward.midlelBox + 1
-						}`,
-						{ parse_mode: 'HTML', ...backToBoxOptions }
-					)
-				}
-			}
-			if (data === '/largeBox') {
-				if (user.LUCK < process.env.LARGE_BOX_LUCK) {
-					return await bot.sendMessage(
-						chatId,
-						`❌Недостаточно ${process.env.COIN_NAME} для покупки!`
-					)
-				} else {
-					await bot.deleteMessage(chatId, msg.message.message_id)
-					await addLargeBoxByUserId(user)
-					return await bot.sendMessage(
-						chatId,
-						`✅ Вы успешно приобрели 1 Таинственный ларец! Всего: ${
-							userReward.largeBox + 1
-						}`,
-						{ parse_mode: 'HTML', ...backToBoxOptions }
-					)
-				}
-			}
-			if (data === '/amulet') {
-				await bot.deleteMessage(chatId, msg.message.message_id)
-				return await bot.sendMessage(
-					chatId,
-					`
-					💎В данном разделе находятся талисманы.\n\n💎Талисманы приносят каждые 24 часа определенное количество ${process.env.COIN_NAME}, дополнительных действий не требуется!\n\n1. Бронзовый талисман\nЕжедневно приносит 10 ${process.env.COIN_NAME}\n\n2. Серебряный талисман\nЕжедневно приносит 20 ${process.env.COIN_NAME}\n\n3. Золотой талисман\nЕжедневно приносит 30 ${process.env.COIN_NAME}\n\n4. Бриллиантовый талисман\nЕжедневно приносит 10 ${process.env.COIN_NAME}`,
-					{
-						parse_mode: 'HTML',
-						...amuletOptions,
-					}
-				)
-			}
+
 			if (data === '/inventory') {
 				return await bot.sendMessage(chatId, 'inventory')
 			}
