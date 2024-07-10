@@ -45,7 +45,7 @@ const startApp = async () => {
 			const userTask = await findTaskInfoByUserID(user.id)
 
 			await game(data, msg, chatId, user)
-			await shopQuery(data, msg, chatId, user)
+			await shopQuery(data, msg, chatId, user, userReward)
 			await langQuery(data, chatId, msg, user)
 
 			if (data === '/goToMainMenu') {
