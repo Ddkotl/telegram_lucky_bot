@@ -9,7 +9,12 @@ import {
 } from './commands/index.js'
 
 import { createUserActions } from './actions/user/index.js'
-import { game, langQuery, shopQuery } from './callback_queries/index.js'
+import {
+	game,
+	inventoryQuery,
+	langQuery,
+	shopQuery,
+} from './callback_queries/index.js'
 import { findRewardInfoByUserID } from './db_querys/reward/index.js'
 import { completeTask1, findTaskInfoByUserID } from './db_querys/task/index.js'
 import { findUserByChatId } from './db_querys/user/index.js'
@@ -47,6 +52,7 @@ const startApp = async () => {
 			await game(data, msg, chatId, user)
 			await shopQuery(data, msg, chatId, user, userReward)
 			await langQuery(data, chatId, msg, user)
+			await inventoryQuery(data, user, chatId, msg, userReward)
 
 			if (data === '/goToMainMenu') {
 				await bot.deleteMessage(chatId, msg.message.message_id)
@@ -142,9 +148,6 @@ const startApp = async () => {
 				}
 			}
 
-			if (data === '/inventory') {
-				return await bot.sendMessage(chatId, 'inventory')
-			}
 			if (data === '/connectWallet') {
 				await bot.deleteMessage(chatId, msg.message.message_id)
 
