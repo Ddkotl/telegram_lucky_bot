@@ -4,7 +4,7 @@ export function getRamdomNumber() {
 }
 
 export const calculeteMyltiplier = async userReward => {
-	let myltiplier = 1
+	let myltiplier = 0
 	if (userReward.bronzeAmylet) {
 		myltiplier = myltiplier + 0.05
 	}

@@ -8,4 +8,5 @@ export {
 	addMiddleBoxByUserId,
 	addSilverAmyletByUserId,
 	addSmallBoxByUserId,
+	updateDateGetReward,
 } from './update.js'

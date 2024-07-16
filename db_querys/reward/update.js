@@ -104,3 +104,14 @@ export const addDiamondAmyletByUserId = async user => {
 		},
 	})
 }
+
+export const updateDateGetReward = async id => {
+	await prisma.userReward.update({
+		where: {
+			userId: id,
+		},
+		data: {
+			getReward: new Date(),
+		},
+	})
+}
