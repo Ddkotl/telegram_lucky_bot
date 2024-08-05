@@ -4,7 +4,7 @@ export function getRamdomNumber() {
 }
 
 export const calculeteMyltiplier = async (userReward) => {
-  let myltiplier = 0;
+  let myltiplier = 1;
   if (userReward.bronzeAmylet) {
     myltiplier = myltiplier + 0.05;
   }
@@ -32,3 +32,23 @@ export const calculeteRewardsForBox = async (userReward) => {
 
   return `${minReward} - ${maxReward}`;
 };
+
+export const getRewardFromBoxes = async (userReward) => {
+  let minReward =
+    (await userReward.smallBox) * 10 +
+    (await userReward.midlelBox) * 60 +
+    (await userReward.largeBox) * 140;
+  let maxReward =
+    (await userReward.smallBox) * 50 +
+    (await userReward.midlelBox) * 250 +
+    (await userReward.largeBox) * 550;
+
+  let reward =
+    randomInteger(minReward, maxReward) * (await calculeteMyltiplier(userReward));
+console.log(reward)
+  return reward;
+};
+function randomInteger(min, max) {
+  let rand = min + Math.random() * (max + 1 - min);
+  return Math.floor(rand);
+}

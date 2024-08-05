@@ -1,5 +1,6 @@
 import { bot } from "../../bot.js";
 import { updateDateGetReward } from "../../db_querys/reward/index.js";
+import { getRewardFromBoxes } from "../../functions.js";
 import {
   backToInventoryOptions,
   rewardAlreadeGetMessage,
@@ -24,12 +25,12 @@ export const getReward = async (data, user, chatId, msg, userReward) => {
         { parse_mode: "HTML", ...(await backToInventoryOptions(user.lang)) },
       );
     } else {
-      // await getRewardFromBoxes(user.id)
-      await updateDateGetReward(user.id);
+      let boxesReward = await getRewardFromBoxes(userReward);
+      await updateDateGetReward(user, boxesReward);
       await bot.deleteMessage(chatId, msg.message.message_id);
       return await bot.sendMessage(
         chatId,
-        await successGetRewardMessage(user.lang),
+        await successGetRewardMessage(user.lang, boxesReward),
         {
           parse_mode: "HTML",
           ...(await backToInventoryOptions(user.lang)),

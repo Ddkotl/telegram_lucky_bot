@@ -105,13 +105,22 @@ export const addDiamondAmyletByUserId = async (user) => {
   });
 };
 
-export const updateDateGetReward = async (id) => {
+export const updateDateGetReward = async (user, boxesReward) => {
+  let newLuck =  Number(user.LUCK) + Number(boxesReward)
   await prisma.userReward.update({
     where: {
-      userId: id,
+      userId: user.id,
     },
     data: {
       getReward: new Date(),
     },
   });
+  // await prisma.user.update({
+  //   where: {
+  //     id: user.id,
+  //   },
+  //   data: {
+  //     LUCK: newLuck,
+  //   },
+  // });
 };
