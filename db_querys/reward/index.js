@@ -1,12 +1,12 @@
-export { createUserReward } from './create.js'
-export { findRewardInfoByUserID } from './find.js'
+export { createUserReward } from "./create.js";
+export { findRewardInfoByUserID } from "./find.js";
 export {
-	addBronzeAmyletByUserId,
-	addDiamondAmyletByUserId,
-	addGoldAmyletByUserId,
-	addLargeBoxByUserId,
-	addMiddleBoxByUserId,
-	addSilverAmyletByUserId,
-	addSmallBoxByUserId,
-	updateDateGetReward,
-} from './update.js'
+  addBronzeAmyletByUserId,
+  addDiamondAmyletByUserId,
+  addGoldAmyletByUserId,
+  addLargeBoxByUserId,
+  addMiddleBoxByUserId,
+  addSilverAmyletByUserId,
+  addSmallBoxByUserId,
+  updateDateGetReward,
+} from "./update.js";

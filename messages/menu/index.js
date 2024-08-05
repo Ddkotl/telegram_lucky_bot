@@ -1,1 +1,1 @@
-export { mainMenuMessage } from './main_menu_message.js'
+export { mainMenuMessage } from "./main_menu_message.js";

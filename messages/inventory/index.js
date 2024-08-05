@@ -1,1 +1,1 @@
-export { inventoryMessage } from './inventory_message.js'
+export { inventoryMessage } from "./inventory_message.js";

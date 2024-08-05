@@ -1,1 +1,1 @@
-export { registerMessage } from './register_message.js'
+export { registerMessage } from "./register_message.js";
