@@ -45,7 +45,6 @@ export const getRewardFromBoxes = async (userReward) => {
 
   let reward =
     randomInteger(minReward, maxReward) * (await calculeteMyltiplier(userReward));
-console.log(reward)
   return reward;
 };
 function randomInteger(min, max) {

@@ -72,3 +72,13 @@ export const updateUserLang = async (userId, lang) => {
     console.log(error);
   }
 };
+export const updateWallet = async (userId, wallet) => {
+  try {
+    await prisma.user.update({
+      where: { id: userId },
+      data: { tonWallet: wallet },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

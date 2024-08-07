@@ -26,6 +26,7 @@ export const game = async (data, msg, chatId, user) => {
       },
       { parse_mode: "HTML" },
     );
+  
     return await bot.sendMessage(
       chatId,
       await playAgainMessage(user.lang),
@@ -53,9 +54,10 @@ export const game = async (data, msg, chatId, user) => {
         { parse_mode: "HTML" },
       );
     }
-
+    await bot.deleteMessage(chatId,msg.message.message_id -1)
     return await bot.sendMessage(
       chatId,
+      
       await playAgainMessage(user.lang),
       await startGameOptions(user.lang),
     );

@@ -45,8 +45,8 @@ export const inventoryMessage = async (lang, userReward) => {
       userReward.goldAmylet ? `active: +15%` : `inactive`
     }\n - Diamond amylet: ${
       userReward.diamondAmylet ? `active: +20%` : `inactive`
-    }\n\n💎Current multiplier for ${process.env.COIN_NAME}: ${
-      (await calculeteMyltiplier(userReward)) * 100
+    }\n\n💎Current multiplier for ${process.env.COIN_NAME}: +${
+      (await calculeteMyltiplier(userReward) - 1) * 100
     }%`;
   }
 };

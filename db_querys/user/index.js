@@ -6,4 +6,5 @@ export {
   updateUserLang,
   updateUserLose,
   updateUserWin,
+  updateWallet,
 } from "./update.js";

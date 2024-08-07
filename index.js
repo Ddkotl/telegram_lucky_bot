@@ -17,8 +17,9 @@ import {
 } from "./callback_queries/index.js";
 import { findRewardInfoByUserID } from "./db_querys/reward/index.js";
 import { completeTask1, findTaskInfoByUserID } from "./db_querys/task/index.js";
-import { findUserByChatId } from "./db_querys/user/index.js";
-import { connectWalletOptions } from "./options.js";
+import { findUserByChatId, updateWallet } from "./db_querys/user/index.js";
+import { goToMainMenuOptions } from "./options/menu/go_to_main_menu.js";
+import { walletMessage, walletMessageFail, walletMessageSuccess } from "./messages/wallet/index.js";
 
 const startApp = async () => {
   setMyCommands();
@@ -35,6 +36,21 @@ const startApp = async () => {
       }
       if (text === "/start") {
         return await startCommand(chatId, user);
+      }
+      if (text.startsWith("/wallet") && text.length > 7) {
+        const wallet = text.slice(8);
+        if(wallet.startsWith('UQ') && wallet.length == 48){
+          await updateWallet(user.id , wallet)
+          return await bot.sendMessage(chatId, await walletMessageSuccess(user.lang), {
+            parse_mode: "HTML",
+            ...(await goToMainMenuOptions(user.lang)),
+          });
+        }else{
+          return await bot.sendMessage(chatId, await walletMessageFail(user.lang), {
+            parse_mode: "HTML",
+            ...(await goToMainMenuOptions(user.lang)),
+          }); 
+        }
       }
       return await notUnderstandCommand(chatId, user);
     } catch (error) {
@@ -70,7 +86,7 @@ const startApp = async () => {
         await bot.deleteMessage(chatId, msg.message.message_id);
         return await bot.sendMessage(
           chatId,
-          `❇️ Активные задания\n✅ Выполненные заданияю\n\nВыполняйте задания - зарабатывайте ${process.env.COIN_NAME}!\nВсё очень просто.\nВы получите по ${process.env.COIN_FOR_TASK} ${process.env.COIN_NAME} за выполнение задания`,
+          `❇️ Активные задания\n✅ Выполненные задания\n\nВыполняйте задания - зарабатывайте ${process.env.COIN_NAME}!\nВсё очень просто.\nВы получите по ${process.env.COIN_FOR_TASK} ${process.env.COIN_NAME} за выполнение задания`,
           {
             parse_mode: "HTML",
             reply_markup: JSON.stringify({
@@ -133,7 +149,7 @@ const startApp = async () => {
         }
       }
       if (data === "/checkTask1") {
-        const pass = await bot.getChatMember("@luck_drop", chatId);
+        const pass = await bot.getChatMember("@LuckyDropGame", chatId);
         if (pass.status === "left") {
           return await bot.sendMessage(
             chatId,
@@ -147,31 +163,12 @@ const startApp = async () => {
           );
         }
       }
-
-      if (data === "/connectWallet") {
-        await bot.deleteMessage(chatId, msg.message.message_id);
-
-        return await bot.sendMessage(
-          chatId,
-          `💎Введите номер вашего кошелька в сети $TON и нажмите сохранить:`,
-          { parse_mode: "HTML", ...saveWalletOptions },
-        );
-      }
-      if (data === "/saveWallet") {
-        console.log(msg);
-        return await bot.sendMessage(
-          chatId,
-          `��Кошелек успешно сохранен, теперь вы можете начать получать ${process.env.COIN_NAME}!`,
-          { parse_mode: "HTML", ...goToMainMenuOptions },
-        );
-      }
       if (data === "/wallet") {
         await bot.deleteMessage(chatId, msg.message.message_id);
-        return await bot.sendMessage(
-          chatId,
-          `💎Привяжите свой кошелек в сети $TON, на него будут отправляться награды и будущий аирдроп.\n\n 💎В данный момент кошелек не привязан`,
-          { parse_mode: "HTML", ...connectWalletOptions },
-        );
+        return await bot.sendMessage(chatId, await walletMessage(user), {
+          parse_mode: "HTML",
+          ...(await goToMainMenuOptions(user.lang)),
+        });
       }
     } catch (error) {
       console.log(error);
