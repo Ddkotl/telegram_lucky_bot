@@ -9,4 +9,10 @@ export const completeTask1 = async (user) => {
       task1: true,
     },
   });
+  await prisma.user.update({
+    where: { id:user.id },
+    data: {
+      LUCK: user.LUCK + Number(process.env.COIN_FOR_TASK),
+    },
+  });
 };
